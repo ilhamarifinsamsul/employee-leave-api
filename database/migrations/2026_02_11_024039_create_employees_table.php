@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->unique('nik');
+            $table->string('nik')->unique();
             $table->string('name');
             $table->string('department');
             $table->unsignedTinyInteger('leave_balance')->default(12);
