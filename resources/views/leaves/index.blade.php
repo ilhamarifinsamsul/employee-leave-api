@@ -1,4 +1,4 @@
-@extends('layouts.app');
+@extends('layouts.app')
 @section('title', 'List Leaves')
 
 @section('content')
@@ -31,7 +31,8 @@
                         <th>Nama</th>
                         <th>Department</th>
                         <th>Tanggal</th>
-                        <th>Total Hari</th>
+                        <th>Total Hari Cuti</th>
+                        <th>Sisa Hari</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -40,40 +41,69 @@
                     @foreach ($leaveRequests as $leaveRequest)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $leaveRequest->employee->nik }}</td>
-                        <td>{{ $leaveRequest->employee->name }}</td>
-                        <td>{{ $leaveRequest->employee->department }}</td>
+                        <td>{{ $leaveRequest['employee']['nik'] ?? '-' }}</td>
+                        <td>{{ $leaveRequest['employee']['name'] ?? '-' }}</td>
+                        <td>{{ $leaveRequest['employee']['department'] ?? '-' }}</td>
                         <td>
-                            {{ $leaveRequest->start_date }}
+                            {{ $leaveRequest['start_date'] }}
                             <span class="text-muted">s/d</span>
-                            {{ $leaveRequest->end_date }}
+                            {{ $leaveRequest['end_date'] }}
                         </td>
+                        {{-- total days --}}
                         <td>
                             <span class="badge bg-info">
-                                {{ $leaveRequest->total_days }} hari
+                                {{ $leaveRequest['total_days'] }} hari
+                            </span>
+                        </td>
+                        {{-- sisa hari --}}
+                        <td>
+                            <span class="badge bg-secondary">
+                                {{ $leaveRequest['employee']['leave_balance'] }} hari
                             </span>
                         </td>
                         {{-- status --}}
                         <td>
-                            @if ($leaveRequest->status === 'pending')
+                            @if ($leaveRequest['status'] === 'pending')
                                 <span class="badge bg-warning">
-                                    {{ $leaveRequest->status }}
+                                    {{ $leaveRequest['status'] }}
                                 </span>
-                            @elseif ($leaveRequest->status === 'approved')
+                            @elseif ($leaveRequest['status'] === 'approved')
                                 <span class="badge bg-success">
-                                    {{ $leaveRequest->status }}
+                                    {{ $leaveRequest['status'] }}
                                 </span>
                             @else
                                 <span class="badge bg-danger">
-                                    {{ $leaveRequest->status }}
+                                    {{ $leaveRequest['status'] }}
                                 </span>
                             @endif
                         </td>
                         {{-- Aksi Admin --}}
                         <td>
-                            
+                            @if ($leaveRequest['status'] === 'pending')
+                                <div class="d-flex gap-2">
+                                    {{-- approve --}}
+                                    <form action="{{ route('leave.approve', $leaveRequest['id']) }}" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Approve cuti ini?')">
+                                            Approve
+                                        </button>
+                                    </form>
+                                    {{-- reject --}}
+                                    <form action="{{ route('leave.reject', $leaveRequest['id']) }}" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Reject cuti ini?')">
+                                            Reject
+                                        </button>
+                                    </form>
+                                </div>
+                            @else
+                                <span class="text-muted fst-italic">
+                                    <p>Tidak Ada Aksi</p>
+                                </span>
+                            @endif
                         </td>
-
                     </tr>
                     @endforeach
                 </tbody>
