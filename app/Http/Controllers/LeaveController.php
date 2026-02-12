@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\LeaveRequest;
 use Illuminate\Http\Request;
@@ -11,6 +12,7 @@ class LeaveController extends Controller
 {
     private string $apiUrl;
 
+    // __construct
     public function __construct()
     {
         $this->apiUrl = 'http://127.0.0.1:8001/api/leave-requests';
@@ -19,6 +21,7 @@ class LeaveController extends Controller
     // List leave page
     public function index()
     {
+        // response ambil Http
         $response = Http::acceptJson()->get($this->apiUrl);
 
         if ($response->failed()) {

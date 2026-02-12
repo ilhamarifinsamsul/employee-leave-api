@@ -96,7 +96,7 @@ class LeaveRequestController extends Controller
             'end_date' => $end_date->toDateString(),
             'total_days' => $totalDays,
             'status' => 'pending',
-            
+
         ]);
 
         return response()->json([
