@@ -43,7 +43,7 @@ class LeaveRequestController extends Controller
         $validator = Validator::make($request->all(), [
             'employee_id' => 'required|exists:employees,id',
             'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
+            'end_date' => 'required|date',
         ]);
 
         // jika validasi gagal
