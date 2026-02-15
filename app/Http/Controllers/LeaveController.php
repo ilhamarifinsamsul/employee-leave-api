@@ -97,7 +97,6 @@ class LeaveController extends Controller
                 'error' => $response->json('message') ?? 'Reject gagal'
             ]);
         }
-
         return redirect()->route('leave.index')->with('success', $response->json('message'));
     }
 }
