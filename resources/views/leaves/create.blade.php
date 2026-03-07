@@ -63,35 +63,31 @@ $(document).ready(function() {
     loadEmployees();
     
     function loadEmployees() {
-        // Ambil data employees dari LeaveRequestController API
+        // Ambil data pada saat halaman dimuat
+        $('#employee_id').html('<option value="">Select Employee</option>');
+
         $.ajax({
             url: '/api/leave-requests/employees',
             method: 'GET',
             dataType: 'json',
             success: function(response) {
-                console.log('Response dari API employees:', response);
+                console.log('Employees loaded:', response);
+
                 if (response.success) {
                     renderEmployees(response.data);
                 } else {
-                    showAlert('danger', response.message || 'Gagal mengambil data karyawan');
+                    showAlert('error', response.message || 'Failed to load employees');
                 }
             },
+
             error: function(xhr, status, error) {
-                console.log('Error loading employees:', xhr.responseText);
-                showAlert('danger', 'Terjadi kesalahan saat mengambil data karyawan');
-                
-                // Fallback: render dummy data jika API employees tidak ada
-                const dummyEmployees = [
-                    {id: 1, name: 'Budi Santoso', nik: 'EMP001', department: 'Sewing'},
-                    {id: 2, name: 'Fany Ghasani', nik: 'CTG001', department: 'Cutting'},
-                    {id: 3, name: 'Hari Buadiawan', nik: 'FSG001', department: 'Finishing'},
-                    {id: 4, name: 'Shinta Joana', nik: 'QA001', department: 'QA'},
-                    {id: 6, name: 'Sri Andriani', nik: 'FSG0003', department: 'Finishing'}
-                ];
-                renderEmployees(dummyEmployees);
+                console.error('Error loading employees:', error);
+                showAlert('error', 'Failed to load employees');
             }
-        });
+        })
     }
+
+    
     
     function renderEmployees(employees) {
         let html = '<option value="">Select Employee</option>';
@@ -170,7 +166,7 @@ $(document).ready(function() {
         // Auto hide after 5 seconds
         setTimeout(function() {
             $('#alert-container .alert').alert('close');
-        }, 5000);
+        }, 3000);
     }
 });
 </script>
