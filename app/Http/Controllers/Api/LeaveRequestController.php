@@ -14,7 +14,7 @@ class LeaveRequestController extends Controller
     // List leave requests by employee
     public function index(Request $request)
     {
-        $data = LeaveRequest::with('employee')->latest();
+        $data = LeaveRequest::with('employee')->orderBy('created_at', 'desc');
 
         if ($request->employee_id) {
             $employee = Employee::find($request->employee_id);
@@ -61,7 +61,7 @@ class LeaveRequestController extends Controller
         if ($employee->leave_balance <= 0) {
             return response()->json([
                 'success' => false,
-                'message' => 'Sisa cuti tidak boleh 0',
+                'message' => 'Sisa cuti Anda habis, tidak bisa mengajukan cuti',
             ], 422);
         }
 
@@ -103,6 +103,24 @@ class LeaveRequestController extends Controller
             'success' => true,
             'message' => 'Data cuti berhasil disimpan',
             'data' => $leaveRequest,
+        ], 200);
+    }
+
+    // endpoint untuk mengambil data employees
+    public function getEmployees()
+    {
+        $employees = Employee::select(
+            'id',
+            'name',
+            'nik',
+            'department',
+            'leave_balance'
+        )->get();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Data karyawan berhasil diambil',
+            'data' => $employees
         ], 200);
     }
 

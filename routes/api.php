@@ -15,6 +15,9 @@ Route::prefix('leave-requests')->group(function () {
     // endpoint pengajuan cuti
     Route::post('/', [LeaveRequestController::class, 'store']);
 
+    // endpoint untuk mengambil data employees
+    Route::get('/employees', [LeaveRequestController::class, 'getEmployees']);
+
     // approve cuti
     Route::patch('/{leaveRequest}/approve', [LeaveRequestController::class, 'approve']);
 
